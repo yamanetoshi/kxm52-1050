@@ -1,0 +1,40 @@
+const int xAxisPin = 0;
+const int yAxisPin = 1;
+const int zAxisPin = 2;
+
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  String x = String(retAxisTilt(analogRead(xAxisPin)));
+  String y = String(retAxisTilt(analogRead(yAxisPin)));
+  String z = String(retAxisTilt(analogRead(zAxisPin)));
+
+  Serial.println(getOutputString(x, y, z));
+  delay(1000);
+}
+
+String getOutputString(int x, int y, int z) {
+  String msg = "";
+  msg.concat(x);
+  msg.concat(",");
+  msg.concat(y);
+  msg.concat(",");
+  msg.concat(z);
+
+  return msg;
+}
+
+int retAxisTilt(int AxisValue) {
+  float AxisSinTheta = mapInFloat(AxisValue, 306, 716, -1, 1);
+
+  AxisSinTheta = constrain(AxisSinTheta, -1, 1);
+
+  return floor(asin(xAxisSinTheta) * 180 / PI);
+}
+
+float mapInFloat(float x, float iMin, float iMax,
+  float oMin, float oMax) {
+  return (x - iMin) * (oMax - oMin) / (iMax - iMin) + oMin;
+}
